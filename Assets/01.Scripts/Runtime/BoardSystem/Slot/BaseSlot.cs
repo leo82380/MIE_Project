@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MIE.BoardSystem.Item;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MIE.BoardSystem.Slot
 {
@@ -10,7 +11,8 @@ namespace MIE.BoardSystem.Slot
         [SerializeField] private int itemSlotCount = 3;
         [SerializeField] private ItemSlot itemSlotPrefab;
         [SerializeField] private RectTransform itemSlotParent;
-
+        [SerializeField] private Image lockImage;
+        [SerializeField] private bool isLocked;
         private List<ItemSlot> itemSlots;
 
         private void Awake()
@@ -38,8 +40,12 @@ namespace MIE.BoardSystem.Slot
             return count == 3;
         }
 
+        /// <summary>
+        /// 슬롯 초기화 메서드
+        /// </summary>
         public void InitializeSlot()
         {
+            lockImage.gameObject.SetActive(isLocked);
             itemSlots = new List<ItemSlot>();
             for (int i = 0; i < itemSlotCount; i++)
             {
@@ -48,10 +54,22 @@ namespace MIE.BoardSystem.Slot
             }
         }
 
+        /// <summary>
+        /// 랜덤한 아이템 슬롯에 아이템을 생성하고 추가하는 메서드
+        /// </summary>
+        /// <returns></returns>
         public BaseItem PushItem()
         {
             int randomIndex = Random.Range(0, itemSlots.Count);
             return itemSlots[randomIndex].PushItem();
         }
+
+    }
+
+    public enum LockType
+    {
+        None, // Unlocked
+        Key,  // Locked with a key
+        Count // Locked with a count
     }
 }

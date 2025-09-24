@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MIE.BoardSystem.Item.Component;
 using MIE.BoardSystem.Item.Data;
+using MIE.Manager.Interface;
 using UnityEngine;
 
 namespace MIE.BoardSystem.Item
@@ -28,6 +29,10 @@ namespace MIE.BoardSystem.Item
                 {
                     componentDict[type] = component;
                     component.RegisterEvent(this);
+                    if (component is IInitializable initializable)
+                    {
+                        initializable.Initialize();
+                    }
                 }
                 else
                 {
@@ -47,13 +52,16 @@ namespace MIE.BoardSystem.Item
 
         public void SetLayer(int layer)
         {
-            this.Layer = layer;
-            OnEnableItem?.Invoke(layer);
+            Layer = layer;
+            transform.localScale = Vector3.one * (1 - Layer * 0.1f);
+            OnEnableItem?.Invoke(Layer);
         }
 
         public void AddLayer(int addValue)
         {
-            OnEnableItem?.Invoke(Layer + addValue);
+            Layer += addValue;
+            transform.localScale = Vector3.one * (1 - Layer * 0.1f);
+            OnEnableItem?.Invoke(Layer);
         }
 
         public void SetItemData(ItemDataSO data)

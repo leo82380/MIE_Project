@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace MIE.BoardSystem
 {
+    // 보드 매니저 클래스
     public class Board : MonoBehaviour
     {
         [SerializeField] private List<BaseSlot> slots;
@@ -16,7 +17,9 @@ namespace MIE.BoardSystem
             InitializeBoard();
         }
 
-        // 아이템 생성 및 슬롯에 배치
+        /// <summary>
+        /// 보드 초기화 메서드
+        /// </summary>
         private void InitializeBoard()
         {
             for (int i = 0; i < matchCount; i++)
