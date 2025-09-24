@@ -4,49 +4,54 @@ using UnityEngine;
 
 namespace MIE.BoardSystem.Slot
 {
+    // 기본 슬롯 클래스
     public class BaseSlot : MonoBehaviour
     {
-        [SerializeField] private BaseItem itemPrefab;
-        [SerializeField] private RectTransform itemParent;
-        private Stack<BaseItem> items;
+        [SerializeField] private int itemSlotCount = 3;
+        [SerializeField] private ItemSlot itemSlotPrefab;
+        [SerializeField] private RectTransform itemSlotParent;
+
+        private List<ItemSlot> itemSlots;
 
         private void Awake()
         {
-            items = new Stack<BaseItem>();
+            InitializeSlot();
         }
 
-        public void PushItem(BaseItem item)
+        public bool CheckMerge()
         {
-            items.Push(item);
-            item.SetLayer(0);
-            foreach (var it in items)
+            int count = 0;
+
+            // 가지고 있는 아이템 슬롯을 전부 확인
+            for (int i = 0; i < itemSlots.Count; i++)
             {
-                it.AddLayer(1);
+                // 이전 아이템 슬롯과 현재 아이템 슬롯의 아이템이 동일한지, 레이어도 동일한지 확인
+                var frontItem = itemSlots[i];
+                var beforeItem = i > 0 ? itemSlots[i - 1] : null;
+                if (frontItem != null &&
+                    frontItem.GetFront().ItemID == beforeItem?.GetFront().ItemID &&
+                    frontItem.GetFrontLayer() == beforeItem?.GetFrontLayer())
+                {
+                    count++;
+                }
+            }
+            return count == 3;
+        }
+
+        public void InitializeSlot()
+        {
+            itemSlots = new List<ItemSlot>();
+            for (int i = 0; i < itemSlotCount; i++)
+            {
+                var slot = Instantiate(itemSlotPrefab, itemSlotParent);
+                itemSlots.Add(slot);
             }
         }
 
         public BaseItem PushItem()
         {
-            var item = Instantiate(itemPrefab, itemParent);
-            items.Push(item);
-            item.SetLayer(0);
-            foreach (var it in items)
-            {
-                it.AddLayer(1);
-            }
-            return item;
-        }
-
-        public BaseItem PopItem()
-        {
-            if (items.Count == 0) return null;
-            var item = items.Pop();
-            item.SetLayer(5);
-            foreach (var it in items)
-            {
-                it.AddLayer(-1);
-            }
-            return item;
+            int randomIndex = Random.Range(0, itemSlots.Count);
+            return itemSlots[randomIndex].PushItem();
         }
     }
 }

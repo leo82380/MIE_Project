@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace MIE.BoardSystem.Item
 {
+    // 아이템의 기본 클래스
     public class BaseItem : MonoBehaviour, IItem
     {
         private ItemDataSO itemData;
@@ -14,7 +15,7 @@ namespace MIE.BoardSystem.Item
         public event Action<int> OnEnableItem;
         public event Action<ItemDataSO> OnSetItemData;
 
-        private int layer;
+        public int Layer { get; private set; }
 
         private void Awake()
         {
@@ -46,13 +47,13 @@ namespace MIE.BoardSystem.Item
 
         public void SetLayer(int layer)
         {
-            this.layer = layer;
+            this.Layer = layer;
             OnEnableItem?.Invoke(layer);
         }
 
         public void AddLayer(int addValue)
         {
-            OnEnableItem?.Invoke(layer + addValue);
+            OnEnableItem?.Invoke(Layer + addValue);
         }
 
         public void SetItemData(ItemDataSO data)
@@ -60,6 +61,11 @@ namespace MIE.BoardSystem.Item
             itemData = data;
             gameObject.name = $"Item_{data.ItemID}_{data.ItemType}";
             OnSetItemData?.Invoke(data);
+        }
+
+        public ItemDataSO GetItemData()
+        {
+            return itemData;
         }
     }
 }
