@@ -11,7 +11,7 @@ namespace MIE.BoardSystem.Slot
         [SerializeField] private int itemSlotCount = 3;
         [SerializeField] private ItemSlot itemSlotPrefab;
         [SerializeField] private RectTransform itemSlotParent;
-        [SerializeField] private Image lockImage;
+        [SerializeField] private LockSlot lockImage;
         [SerializeField] private bool isLocked;
         private List<ItemSlot> itemSlots;
 
