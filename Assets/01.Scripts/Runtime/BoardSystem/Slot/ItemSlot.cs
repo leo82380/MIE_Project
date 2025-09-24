@@ -24,11 +24,11 @@ namespace MIE.BoardSystem.Slot
         public void PushItem(BaseItem item)
         {
             items.Push(item);
-            item.SetLayer(0);
             foreach (var it in items)
             {
                 it.AddLayer(1);
             }
+            item.SetLayer(0);
         }
 
         /// <summary>
@@ -39,11 +39,11 @@ namespace MIE.BoardSystem.Slot
         {
             var item = Instantiate(itemPrefab, itemParent);
             items.Push(item);
-            item.SetLayer(0);
             foreach (var it in items)
             {
                 it.AddLayer(1);
             }
+            item.SetLayer(0);
             return item;
         }
 
@@ -80,6 +80,15 @@ namespace MIE.BoardSystem.Slot
         {
             if (items.Count == 0) return -1;
             return items.Peek().Layer;
+        }
+
+        public bool IsContainsLayerZero()
+        {
+            foreach (var item in items)
+            {
+                if (item.Layer == 0) return true;
+            }
+            return false;
         }
     }
 }

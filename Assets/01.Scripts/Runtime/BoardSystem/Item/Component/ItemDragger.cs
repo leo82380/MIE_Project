@@ -47,32 +47,49 @@ namespace MIE.BoardSystem.Item.Component
             EventSystem.current.RaycastAll(eventData, raycastResults);
             OnEndDragEvent?.Invoke();
 
+            Transform targetParent = null;
             foreach (var result in raycastResults)
             {
                 // 아이템 슬롯에 직접 드래그했을 때
                 if (result.gameObject.TryGetComponent<ItemSlot>(out var itemSlot))
                 {
+                    if (itemSlot.IsContainsLayerZero()) continue;
                     itemSlot.PushItem(baseItem);
-                    transform.SetParent(itemSlot.transform);
-                    rectTransform.anchoredPosition = Vector2.zero;
-                    return;
+                    targetParent = itemSlot.transform;
+                    break;
                 }
                 // 일반 슬롯에 드래그했을 때
                 if (result.gameObject.TryGetComponent<BaseSlot>(out var baseSlot))
                 {
+                    if (baseSlot.IsFull()) continue;
+                    baseSlot.PushItem(baseItem);
+                    targetParent = baseSlot.transform;
+                    break;
                 }
             }
 
-            transform.SetParent(defaultParent);
+            SetParent(targetParent ?? defaultParent);
+        }
+
+        public void SetParent(Transform parent)
+        {
+            rectTransform.SetParent(parent);
             rectTransform.anchoredPosition = Vector2.zero;
         }
 
         public void RegisterEvent(IItem item)
         {
+            item.OnEnableItem += HandleDraggable;
         }
 
         public void UnregisterEvent(IItem item)
         {
+            item.OnEnableItem -= HandleDraggable;
+        }
+
+        private void HandleDraggable(int layer)
+        {
+            SetDraggable(layer == 0);
         }
 
         private void SetDraggable(bool isDraggable)

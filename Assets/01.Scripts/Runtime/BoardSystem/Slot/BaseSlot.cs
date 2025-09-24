@@ -64,6 +64,21 @@ namespace MIE.BoardSystem.Slot
             return itemSlots[randomIndex].PushItem();
         }
 
+        public void PushItem(BaseItem item)
+        {
+            int randomIndex = Random.Range(0, itemSlots.Count);
+            itemSlots[randomIndex].PushItem(item);
+        }
+
+        public bool IsFull()
+        {
+            foreach (var slot in itemSlots)
+            {
+                if (!slot.IsContainsLayerZero()) return false;
+            }
+            return true;
+        }
+
     }
 
     public enum LockType
