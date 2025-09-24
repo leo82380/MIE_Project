@@ -13,12 +13,6 @@ namespace MIE.BoardSystem.Slot
         private void Awake()
         {
             items = new Stack<BaseItem>();
-            for (int i = 5; i > 0; i--)
-            {
-                var item = Instantiate(itemPrefab, itemParent);
-                items.Push(item);
-                item.SetLayer(i);
-            }
         }
 
         public void PushItem(BaseItem item)
@@ -29,6 +23,30 @@ namespace MIE.BoardSystem.Slot
             {
                 it.AddLayer(1);
             }
+        }
+
+        public BaseItem PushItem()
+        {
+            var item = Instantiate(itemPrefab, itemParent);
+            items.Push(item);
+            item.SetLayer(0);
+            foreach (var it in items)
+            {
+                it.AddLayer(1);
+            }
+            return item;
+        }
+
+        public BaseItem PopItem()
+        {
+            if (items.Count == 0) return null;
+            var item = items.Pop();
+            item.SetLayer(5);
+            foreach (var it in items)
+            {
+                it.AddLayer(-1);
+            }
+            return item;
         }
     }
 }

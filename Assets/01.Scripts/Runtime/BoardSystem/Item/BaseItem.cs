@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
 using MIE.BoardSystem.Item.Component;
+using MIE.BoardSystem.Item.Data;
 using UnityEngine;
 
 namespace MIE.BoardSystem.Item
 {
     public class BaseItem : MonoBehaviour, IItem
     {
+        private ItemDataSO itemData;
         private Dictionary<Type, IItemComponent> componentDict;
 
         public event Action<int> OnEnableItem;
+        public event Action<ItemDataSO> OnSetItemData;
+
         private int layer;
 
         private void Awake()
@@ -49,6 +53,13 @@ namespace MIE.BoardSystem.Item
         public void AddLayer(int addValue)
         {
             OnEnableItem?.Invoke(layer + addValue);
+        }
+
+        public void SetItemData(ItemDataSO data)
+        {
+            itemData = data;
+            gameObject.name = $"Item_{data.ItemID}_{data.ItemType}";
+            OnSetItemData?.Invoke(data);
         }
     }
 }
