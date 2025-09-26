@@ -16,7 +16,7 @@ namespace MIE.Editor.Component
             GameObject go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
             if (go == null) return;
 
-            Rect toggleRect = new Rect(selectionRect.xMax - 50, selectionRect.y, 50, selectionRect.height);
+            Rect toggleRect = new Rect(selectionRect.xMax - 20, selectionRect.y, 18, selectionRect.height);
 
             bool isActive = go.activeSelf;
 

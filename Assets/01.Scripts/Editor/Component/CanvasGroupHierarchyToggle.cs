@@ -19,7 +19,7 @@ namespace MIE.Editor.Component
             CanvasGroup cg = go.GetComponent<CanvasGroup>();
             if (cg == null) return;
 
-            Rect buttonRect = new Rect(selectionRect.xMax - 50, selectionRect.y, 50, selectionRect.height);
+            Rect buttonRect = new Rect(selectionRect.xMax - 70, selectionRect.y, 45, selectionRect.height);
 
             bool isOn = (cg.alpha > 0.5f && cg.interactable && cg.blocksRaycasts);
 

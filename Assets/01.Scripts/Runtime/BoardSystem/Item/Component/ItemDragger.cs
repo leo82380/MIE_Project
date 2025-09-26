@@ -15,6 +15,7 @@ namespace MIE.BoardSystem.Item.Component
         private CanvasGroup canvasGroup;
 
         private BaseItem baseItem;
+        private ItemSlot originalSlot; // 드래그 시작한 원래 슬롯
 
         public event Action OnBeginDragEvent;
         public event Action OnEndDragEvent;
@@ -31,6 +32,14 @@ namespace MIE.BoardSystem.Item.Component
         public void OnBeginDrag(PointerEventData eventData)
         {
             SetDraggable(false);
+            
+            // 원래 슬롯 기억하고 해당 슬롯에서 아이템 제거
+            originalSlot = rectTransform.GetComponentInParent<ItemSlot>();
+            if (originalSlot != null)
+            {
+                originalSlot.RemoveItemFromStack(baseItem);
+            }
+            
             rectTransform.SetParent(mainCanvas.transform);
             OnBeginDragEvent?.Invoke();
         }
@@ -45,30 +54,40 @@ namespace MIE.BoardSystem.Item.Component
             SetDraggable(true);
             var raycastResults = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventData, raycastResults);
-            OnEndDragEvent?.Invoke();
 
             Transform targetParent = null;
+            bool droppedSuccessfully = false;
+            
             foreach (var result in raycastResults)
             {
                 // 아이템 슬롯에 직접 드래그했을 때
                 if (result.gameObject.TryGetComponent<ItemSlot>(out var itemSlot))
                 {
-                    if (itemSlot.IsContainsLayerZero()) continue;
+                    // 아이템 슬롯은 항상 아이템을 받을 수 있음 (스택 구조)
                     itemSlot.PushItem(baseItem);
                     targetParent = itemSlot.transform;
+                    droppedSuccessfully = true;
                     break;
                 }
                 // 일반 슬롯에 드래그했을 때
                 if (result.gameObject.TryGetComponent<BaseSlot>(out var baseSlot))
                 {
-                    if (baseSlot.IsFull()) continue;
-                    baseSlot.PushItem(baseItem);
-                    targetParent = baseSlot.transform;
+                    if (baseSlot.IsFull()) continue; // 꽉 찬 슬롯은 건너뛰기
+                    baseSlot.PushItem(baseItem, out targetParent);
+                    droppedSuccessfully = true;
                     break;
                 }
             }
 
+            // 드롭에 실패했으면 원래 슬롯으로 되돌리기
+            if (!droppedSuccessfully && originalSlot != null)
+            {
+                originalSlot.PushItem(baseItem);
+                targetParent = originalSlot.transform;
+            }
+
             SetParent(targetParent ?? defaultParent);
+            OnEndDragEvent?.Invoke();
         }
 
         public void SetParent(Transform parent)

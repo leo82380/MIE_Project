@@ -15,6 +15,21 @@ namespace MIE.BoardSystem
         public void Start()
         {
             InitializeBoard();
+            
+        }
+        
+        /// <summary>
+        /// 모든 슬롯에서 머지 가능한 것들을 확인하고 실행
+        /// </summary>
+        public void CheckAndExecuteAllMerges()
+        {
+            foreach (var slot in slots)
+            {
+                if (slot.CheckMerge())
+                {
+                    slot.ExecuteMerge();
+                }
+            }
         }
 
         /// <summary>
