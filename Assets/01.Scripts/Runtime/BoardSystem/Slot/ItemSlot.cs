@@ -60,9 +60,7 @@ namespace MIE.BoardSystem.Slot
             if (items.Count == 0) return null;
             
             var item = items.Pop();
-            
-            RefreshAllLayers();
-            
+
             item.SetLayer(5);
             return item;
         }
@@ -149,7 +147,23 @@ namespace MIE.BoardSystem.Slot
             if (items.Peek() == item)
             {
                 items.Pop();
-                RefreshAllLayers(); // 남은 아이템들 레이어 재정렬
+                OnItemChanged?.Invoke(items);
+            }
+        }
+        
+        /// <summary>
+        /// 스택의 모든 아이템 레이어를 1씩 감소 (BaseSlot에서 호출)
+        /// </summary>
+        public void ReduceAllLayers()
+        {
+            var itemArray = items.ToArray();
+            for (int i = 0; i < itemArray.Length; i++)
+            {
+                var currentLayer = itemArray[i].Layer;
+                if (currentLayer > 0) // 0번 레이어는 더 이상 감소하지 않음
+                {
+                    itemArray[i].SetLayer(currentLayer - 1);
+                }
             }
         }
     }

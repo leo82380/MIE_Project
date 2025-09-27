@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using MIE.BoardSystem.Item;
@@ -17,7 +18,6 @@ namespace MIE.BoardSystem.Slot
         [SerializeField] private LockSlot lockImage;
         [SerializeField] private bool isLocked;
         private List<ItemSlot> itemSlots;
-
 
         private void Awake()
         {
@@ -78,7 +78,19 @@ namespace MIE.BoardSystem.Slot
             {
                 var slot = Instantiate(itemSlotPrefab, itemSlotParent);
                 itemSlots.Add(slot);
+                
+                // 아이템 변경 이벤트 구독
+                slot.OnItemChanged += OnItemSlotChanged;
             }
+        }
+        
+        /// <summary>
+        /// ItemSlot의 아이템이 변경되었을 때 호출되는 메서드
+        /// </summary>
+        private void OnItemSlotChanged(Stack<BaseItem> items)
+        {
+            // 약간의 지연을 두고 레이어 체크 (다른 ItemSlot들의 변경이 완료된 후)
+            StartCoroutine(CheckAndRefreshAllLayers());
         }
 
         /// <summary>
@@ -115,6 +127,36 @@ namespace MIE.BoardSystem.Slot
                     {
                         Destroy(item.gameObject);
                     }
+                }
+            }
+            
+            // 0번 레이어가 모두 제거되었으면 전체 레이어 재정렬
+            StartCoroutine(CheckAndRefreshAllLayers());
+        }
+        
+        /// <summary>
+        /// 0번 레이어가 모두 없으면 전체 ItemSlot의 레이어를 재정렬
+        /// </summary>
+        public IEnumerator CheckAndRefreshAllLayers()
+        {
+            yield return null; // 한 프레임 대기
+            bool hasLayerZero = false;
+            
+            // 0번 레이어가 하나라도 있는지 확인
+            foreach (var itemSlot in itemSlots)
+            {
+                if (itemSlot.GetFrontLayer() == 0)
+                {
+                    hasLayerZero = true;
+                    break;
+                }
+            }
+            
+            if (!hasLayerZero)
+            {
+                foreach (var itemSlot in itemSlots)
+                {
+                    itemSlot.ReduceAllLayers();
                 }
             }
         }

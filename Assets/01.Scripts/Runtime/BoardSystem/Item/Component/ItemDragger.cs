@@ -86,6 +86,13 @@ namespace MIE.BoardSystem.Item.Component
                 targetParent = originalSlot.transform;
             }
 
+            // 원래 슬롯에서 0번 레이어가 모두 제거되었는지 확인하고 레이어 재정렬
+            if (originalSlot != null)
+            {
+                var originalBaseSlot = originalSlot.GetComponentInParent<BaseSlot>();
+                originalBaseSlot?.CheckAndRefreshAllLayers();
+            }
+
             SetParent(targetParent ?? defaultParent);
             OnEndDragEvent?.Invoke();
         }
