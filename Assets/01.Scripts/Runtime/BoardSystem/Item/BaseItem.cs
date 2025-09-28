@@ -10,6 +10,8 @@ namespace MIE.BoardSystem.Item
     // 아이템의 기본 클래스
     public class BaseItem : MonoBehaviour, IItem
     {
+        [SerializeField] private ParticleSystem mergeEffect;
+
         private ItemDataSO itemData;
         private Dictionary<Type, IItemComponent> componentDict;
 
@@ -41,8 +43,14 @@ namespace MIE.BoardSystem.Item
             }
         }
 
+        public void SpawnMergeEffect()
+        {
+            Instantiate(mergeEffect, transform.position, Quaternion.identity);
+        }
+
         private void OnDestroy()
         {
+
             foreach (var component in componentDict.Values)
             {
                 component.UnregisterEvent(this);

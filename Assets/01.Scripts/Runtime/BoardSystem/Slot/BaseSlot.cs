@@ -51,7 +51,6 @@ namespace MIE.BoardSystem.Slot
                 var frontItem = itemSlot.GetFront();
                 var frontLayer = itemSlot.GetFrontLayer();
 
-                // 0번 레이어이고 아이템이 존재하는 경우만 추가
                 if (frontLayer == 0 && frontItem != null)
                 {
                     layerZeroItems.Add(frontItem.ItemID);
@@ -79,7 +78,6 @@ namespace MIE.BoardSystem.Slot
                 var slot = Instantiate(itemSlotPrefab, itemSlotParent);
                 itemSlots.Add(slot);
                 
-                // 아이템 변경 이벤트 구독
                 slot.OnItemChanged += OnItemSlotChanged;
             }
         }
@@ -89,7 +87,6 @@ namespace MIE.BoardSystem.Slot
         /// </summary>
         private void OnItemSlotChanged(Stack<BaseItem> items)
         {
-            // 약간의 지연을 두고 레이어 체크 (다른 ItemSlot들의 변경이 완료된 후)
             StartCoroutine(CheckAndRefreshAllLayers());
         }
 
@@ -99,15 +96,37 @@ namespace MIE.BoardSystem.Slot
         /// <returns></returns>
         public BaseItem PushItem()
         {
-            int randomIndex = Random.Range(0, itemSlots.Count);
-            return itemSlots[randomIndex].PushItem();
+            var availableSlots = itemSlots.Where(slot => slot.GetFrontLayer() != 0).ToList();
+            
+            if (availableSlots.Count > 0)
+            {
+                int randomIndex = Random.Range(0, availableSlots.Count);
+                return availableSlots[randomIndex].PushItem();
+            }
+            else
+            {
+                int randomIndex = Random.Range(0, itemSlots.Count);
+                return itemSlots[randomIndex].PushItem();
+            }
         }
 
         public void PushItem(BaseItem item, out Transform parent)
         {
-            int randomIndex = Random.Range(0, itemSlots.Count);
-            itemSlots[randomIndex].PushItem(item);
-            parent = itemSlots[randomIndex].transform;
+            var availableSlots = itemSlots.Where(slot => slot.GetFrontLayer() != 0).ToList();
+            
+            if (availableSlots.Count > 0)
+            {
+                int randomIndex = Random.Range(0, availableSlots.Count);
+                var selectedSlot = availableSlots[randomIndex];
+                selectedSlot.PushItem(item);
+                parent = selectedSlot.transform;
+            }
+            else
+            {
+                int randomIndex = Random.Range(0, itemSlots.Count);
+                itemSlots[randomIndex].PushItem(item);
+                parent = itemSlots[randomIndex].transform;
+            }
         }
 
         /// <summary>
@@ -123,6 +142,7 @@ namespace MIE.BoardSystem.Slot
                 if (itemSlot.GetFrontLayer() == 0)
                 {
                     var item = itemSlot.PopItem();
+                    item.SpawnMergeEffect();
                     if (item != null)
                     {
                         Destroy(item.gameObject);
@@ -130,7 +150,6 @@ namespace MIE.BoardSystem.Slot
                 }
             }
             
-            // 0번 레이어가 모두 제거되었으면 전체 레이어 재정렬
             StartCoroutine(CheckAndRefreshAllLayers());
         }
         

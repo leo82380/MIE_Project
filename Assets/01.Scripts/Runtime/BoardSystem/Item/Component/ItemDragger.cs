@@ -33,7 +33,6 @@ namespace MIE.BoardSystem.Item.Component
         {
             SetDraggable(false);
             
-            // 원래 슬롯 기억하고 해당 슬롯에서 아이템 제거
             originalSlot = rectTransform.GetComponentInParent<ItemSlot>();
             if (originalSlot != null)
             {
@@ -63,30 +62,33 @@ namespace MIE.BoardSystem.Item.Component
                 // 아이템 슬롯에 직접 드래그했을 때
                 if (result.gameObject.TryGetComponent<ItemSlot>(out var itemSlot))
                 {
-                    // 아이템 슬롯은 항상 아이템을 받을 수 있음 (스택 구조)
+                    if (itemSlot.GetFrontLayer() == 0)
+                    {
+                        continue;
+                    }
+
                     itemSlot.PushItem(baseItem);
                     targetParent = itemSlot.transform;
                     droppedSuccessfully = true;
                     break;
                 }
+                
                 // 일반 슬롯에 드래그했을 때
                 if (result.gameObject.TryGetComponent<BaseSlot>(out var baseSlot))
                 {
-                    if (baseSlot.IsFull()) continue; // 꽉 찬 슬롯은 건너뛰기
+                    if (baseSlot.IsFull()) continue;
                     baseSlot.PushItem(baseItem, out targetParent);
                     droppedSuccessfully = true;
                     break;
                 }
             }
 
-            // 드롭에 실패했으면 원래 슬롯으로 되돌리기
             if (!droppedSuccessfully && originalSlot != null)
             {
                 originalSlot.PushItem(baseItem);
                 targetParent = originalSlot.transform;
             }
 
-            // 원래 슬롯에서 0번 레이어가 모두 제거되었는지 확인하고 레이어 재정렬
             if (originalSlot != null)
             {
                 var originalBaseSlot = originalSlot.GetComponentInParent<BaseSlot>();
