@@ -33,13 +33,17 @@ namespace MIE.Manager.Core
             InitializeAllManagers();
         }
 
+        private void OnDestroy()
+        {
+            DisposeAllManagers();
+        }
+
         private void InitializeAllManagers()
         {
-            // 리플렉션으로 IManager를 구현하는 모든 타입 찾기
             var assembly = Assembly.GetExecutingAssembly();
             var managerTypes = assembly.GetTypes()
-                .Where(type => typeof(IManager).IsAssignableFrom(type) && 
-                              !type.IsInterface && 
+                .Where(type => typeof(IManager).IsAssignableFrom(type) &&
+                              !type.IsInterface &&
                               !type.IsAbstract)
                 .ToArray();
 
@@ -52,7 +56,7 @@ namespace MIE.Manager.Core
                     if (typeof(MonoBehaviour).IsAssignableFrom(managerType))
                     {
                         manager = GetComponentInChildren(managerType) as IManager;
-                        
+
                         if (manager == null)
                         {
                             var component = gameObject.AddComponent(managerType);
@@ -86,6 +90,17 @@ namespace MIE.Manager.Core
                 catch (Exception ex)
                 {
                     Debug.LogError($"[Managers] Failed to initialize {managerType.Name}: {ex.Message}");
+                }
+            }
+        }
+
+        private void DisposeAllManagers()
+        {
+            foreach (var manager in managerDatas.GetAllManagers())
+            {
+                if (manager is IDisposable disposable)
+                {
+                    disposable.Dispose();
                 }
             }
         }

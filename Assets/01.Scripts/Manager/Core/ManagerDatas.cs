@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using MIE.Manager.Interface;
 using UnityEngine;
 
@@ -33,6 +34,11 @@ namespace MIE.Manager.Core
 
             Debug.LogWarning($"Manager of type {type} not found.");
             return null;
+        }
+
+        public List<IManager> GetAllManagers()
+        {
+            return managers.Values.ToList();
         }
     }
 }
