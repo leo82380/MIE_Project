@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using DG.Tweening;
-using MIE.Manager.Core;
+using MIE.Attribute.Conditional;
 using MIE.Runtime.SoundSystem.Data;
 using UnityEngine;
 
