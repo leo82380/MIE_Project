@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using MIE.BoardSystem.Item;
+using MIE.Manager.Core;
+using MIE.Manager.Manages;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -93,7 +95,7 @@ namespace MIE.BoardSystem.Slot
         /// <summary>
         /// 랜덤한 아이템 슬롯에 아이템을 생성하고 추가하는 메서드
         /// </summary>
-        /// <returns></returns>
+        /// <returns>삽입한 아이템</returns>
         public BaseItem PushItem()
         {
             var availableSlots = itemSlots.Where(slot => slot.GetFrontLayer() != 0).ToList();
@@ -149,6 +151,8 @@ namespace MIE.BoardSystem.Slot
                     }
                 }
             }
+
+            Managers.Instance.GetManager<ComboManager>().AddCombo();
             
             StartCoroutine(CheckAndRefreshAllLayers());
         }

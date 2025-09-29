@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+using System.Reflection;
 using MIE.Manager.Interface;
 using UnityEngine;
 
@@ -32,10 +35,58 @@ namespace MIE.Manager.Core
 
         private void InitializeAllManagers()
         {
-            var managers = GetComponentsInChildren<IManager>();
-            foreach (var manager in managers)
+            // 리플렉션으로 IManager를 구현하는 모든 타입 찾기
+            var assembly = Assembly.GetExecutingAssembly();
+            var managerTypes = assembly.GetTypes()
+                .Where(type => typeof(IManager).IsAssignableFrom(type) && 
+                              !type.IsInterface && 
+                              !type.IsAbstract)
+                .ToArray();
+
+            foreach (var managerType in managerTypes)
             {
-                managerDatas.AddManager(manager);
+                try
+                {
+                    IManager manager = null;
+
+                    if (typeof(MonoBehaviour).IsAssignableFrom(managerType))
+                    {
+                        manager = GetComponentInChildren(managerType) as IManager;
+                        
+                        if (manager == null)
+                        {
+                            var component = gameObject.AddComponent(managerType);
+                            manager = component as IManager;
+                            Debug.Log($"[Managers] Added component: {managerType.Name}");
+                        }
+                        else
+                        {
+                            Debug.Log($"[Managers] Found existing component: {managerType.Name}");
+                        }
+                    }
+                    else
+                    {
+                        if (managerType.GetConstructor(Type.EmptyTypes) != null)
+                        {
+                            manager = Activator.CreateInstance(managerType) as IManager;
+                            Debug.Log($"[Managers] Created new instance: {managerType.Name}");
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"[Managers] {managerType.Name} has no parameterless constructor");
+                            continue;
+                        }
+                    }
+
+                    if (manager != null)
+                    {
+                        managerDatas.AddManager(manager);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[Managers] Failed to initialize {managerType.Name}: {ex.Message}");
+                }
             }
         }
 
