@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using MIE.Manager.Interface;
 using UnityEngine;
+using EventHandler = MIE.Runtime.EventSystem.Core.EventHandler;
 
 namespace MIE.Manager.Core
 {
@@ -103,6 +104,8 @@ namespace MIE.Manager.Core
                     disposable.Dispose();
                 }
             }
+
+            EventHandler.Clear();
         }
 
 

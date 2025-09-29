@@ -1,7 +1,8 @@
 using System;
-using MIE.Manager.Core;
 using MIE.Manager.Interface;
+using MIE.Runtime.EventSystem.Core;
 using UnityEngine;
+using EventHandler = MIE.Runtime.EventSystem.Core.EventHandler;
 
 namespace MIE.Manager.Manages
 {
@@ -11,45 +12,53 @@ namespace MIE.Manager.Manages
 
         public int StarCount => starCount;
 
-        public event Action<int> OnStarCountChanged;
-
-        public void AddStar(int combo)
+        public void AddStar(ComboEvent comboEvent)
         {
-            int increment = GetIncrement(combo);
+            int increment = GetIncrement(comboEvent);
             starCount += increment;
-            OnStarCountChanged?.Invoke(starCount);
-            Debug.Log($"[ResultManager] Combo: {combo}, Increment: {increment}, Total Stars: {starCount}");
+            EventHandler.TriggerEvent(new StarEvent(starCount));
+            Debug.Log($"[ResultManager] Combo: {comboEvent.Combo}, Increment: {increment}, Total Stars: {starCount}");
         }
 
-        private int GetIncrement(int combo)
+        private int GetIncrement(ComboEvent comboEvent)
         {
-            int currentCombo = combo;
+            int currentCombo = comboEvent.Combo;
             int increment = 1;
             int groupSize = 2; // 첫 번째 그룹 크기
-            
+
             while (currentCombo > groupSize)
             {
                 currentCombo -= groupSize;
                 increment++;
                 groupSize++; // 다음 그룹은 1개씩 더 큼
             }
-            
+
             return increment;
         }
 
         public void Initialize()
         {
-            Managers.Instance.GetManager<ComboManager>().OnComboChanged += AddStar;
+            EventHandler.Subscribe<ComboEvent>(AddStar);
         }
 
         public void Dispose()
         {
-            Managers.Instance.GetManager<ComboManager>().OnComboChanged -= AddStar;
+            EventHandler.Unsubscribe<ComboEvent>(AddStar);
         }
 
         public void ResetStars()
         {
             starCount = 0;
+        }
+    }
+
+    public struct StarEvent : IEvent
+    {
+        public int StarCount;
+
+        public StarEvent(int starCount)
+        {
+            StarCount = starCount;
         }
     }
 }
