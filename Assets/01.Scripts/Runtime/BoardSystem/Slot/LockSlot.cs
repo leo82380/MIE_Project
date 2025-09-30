@@ -7,6 +7,11 @@ namespace MIE.BoardSystem.Slot
     {
         [SerializeField] protected Image lockImage;
         [SerializeField] protected Sprite lockSprite;
+        
+        public void SetUp()
+        {
+            transform.SetAsLastSibling();
+        }
         public abstract void Unlock(); 
     }
 }
