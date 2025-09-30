@@ -73,7 +73,9 @@ namespace MIE.BoardSystem.Slot
         /// </summary>
         public void InitializeSlot()
         {
-            lockImage.gameObject.SetActive(isLocked);
+            if (isLocked)
+                lockImage.Lock();
+                
             itemSlots = new List<ItemSlot>();
             for (int i = 0; i < itemSlotCount; i++)
             {

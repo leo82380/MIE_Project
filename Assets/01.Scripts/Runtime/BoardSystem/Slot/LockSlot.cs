@@ -8,8 +8,9 @@ namespace MIE.BoardSystem.Slot
         [SerializeField] protected Image lockImage;
         [SerializeField] protected Sprite lockSprite;
         
-        public void SetUp()
+        public void Lock()
         {
+            gameObject.SetActive(true);
             transform.SetAsLastSibling();
         }
         public abstract void Unlock(); 

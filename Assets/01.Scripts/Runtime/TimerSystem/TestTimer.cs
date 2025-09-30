@@ -4,15 +4,14 @@ using UnityEngine;
 
 namespace MIE.Runtime.TimerText
 {
-    public class TestTimer : MonoBehaviour
+    public class TimerText : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI textMeshProUGUI;
-        [SerializeField] private TextMeshProUGUI textMeshProUGUI2;
+        [SerializeField] private TextMeshProUGUI timerText;
 
         private void Start()
         {
             Timer.AddTimer(1, 10)
-                .Connect(textMeshProUGUI)
+                .Connect(timerText)
                 .OnComplete(() => Debug.Log("타이머 완료!"))
                 .Start();
         }
