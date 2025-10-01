@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using EventHandler = MIE.Runtime.EventSystem.Core.EventHandler;
 using MIE.UI.FadeSystem;
+using MIE.Runtime.EventSystem.Core;
 
 namespace MIE.Manager.Manages
 {
@@ -77,6 +78,13 @@ namespace MIE.Manager.Manages
                 GetUIModule<FadeModule>().OpenPanel("Image_BG");
                 GetUIModule<PopupModule>().OpenPopup(PopupType.GameOver);
             }
+            else if (t.State == GameState.GameClear)
+            {
+                GetUIModule<FadeModule>().OpenPanel("Image_BG");
+                GetUIModule<PopupModule>().OpenPopup(PopupType.GameClear);
+            }
+
+            EventHandler.TriggerEvent<GameEndEvent>();
         }
 
         public T GetUIModule<T>() where T : IUIModule
@@ -90,6 +98,16 @@ namespace MIE.Manager.Manages
             {
                 throw new Exception($"[UIManager] UI Module of type {type} not found.");
             }
+        }
+    }
+
+    public struct GameEndEvent : IEvent
+    {
+        private static GameEndEvent instance = new GameEndEvent();
+
+        public static GameEndEvent Create()
+        {
+            return instance;
         }
     }
 }

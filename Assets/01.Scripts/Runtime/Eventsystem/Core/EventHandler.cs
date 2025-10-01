@@ -49,11 +49,22 @@ namespace MIE.Runtime.EventSystem.Core
             }
         }
 
+        public static void TriggerEvent<T>() where T : IEvent, new()
+        {
+            var type = typeof(T);
+            if (eventTable.TryGetValue(type, out var del))
+            {
+                (del as Action<T>)?.Invoke(new T());
+            }
+        }
+
         public static void Clear()
         {
             eventTable.Clear();
         }
     }
 
-    public interface IEvent { }
+    public interface IEvent
+    {
+    }
 }

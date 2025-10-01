@@ -4,5 +4,6 @@ namespace MIE.UI.PopupSystem
     {
         GameOver,
         Pause,
+        GameClear
     }
 }

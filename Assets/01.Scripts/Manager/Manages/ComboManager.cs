@@ -12,7 +12,7 @@ namespace MIE.Manager.Manages
         public void AddCombo()
         {
             curCombo++;
-            EventHandler.TriggerEvent(new ComboEvent(curCombo));
+            EventHandler.TriggerEvent(ComboEvent.Create(curCombo));
         }
     }
 
@@ -20,9 +20,19 @@ namespace MIE.Manager.Manages
     {
         public int Combo;
 
+        private static ComboEvent instance;
+
         public ComboEvent(int combo)
         {
             Combo = combo;
         }
+
+        public static ComboEvent Create(int combo)
+        {
+            instance.Combo = combo;
+            return instance;
+        }
+
+
     }
 }

@@ -16,7 +16,7 @@ namespace MIE.Manager.Manages
         {
             int increment = GetIncrement(comboEvent);
             starCount += increment;
-            EventHandler.TriggerEvent(new StarEvent(starCount));
+            EventHandler.TriggerEvent(StarEvent.Create(starCount));
             Debug.Log($"[ResultManager] Combo: {comboEvent.Combo}, Increment: {increment}, Total Stars: {starCount}");
         }
 
@@ -56,9 +56,17 @@ namespace MIE.Manager.Manages
     {
         public int StarCount;
 
+        private static StarEvent instance;
+
         public StarEvent(int starCount)
         {
             StarCount = starCount;
+        }
+
+        public static StarEvent Create(int starCount)
+        {
+            instance.StarCount = starCount;
+            return instance;
         }
     }
 }

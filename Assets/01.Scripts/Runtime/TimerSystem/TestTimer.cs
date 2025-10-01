@@ -19,9 +19,16 @@ namespace MIE.Runtime.TimerText
 
         private void HandleTimerEnd()
         {
-            EventSystem.Core.EventHandler.TriggerEvent(new TimerCompleteEvent());
+            EventSystem.Core.EventHandler.TriggerEvent<TimerCompleteEvent>();
         }
     }
 
-    public struct TimerCompleteEvent : EventSystem.Core.IEvent {}
+    public struct TimerCompleteEvent : EventSystem.Core.IEvent
+    {
+        private static TimerCompleteEvent instance = new TimerCompleteEvent();
+        public static TimerCompleteEvent Create()
+        {
+            return instance;
+        }
+    }
 }

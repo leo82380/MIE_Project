@@ -4,6 +4,7 @@ using System.Linq;
 using MIE.Manager.Core;
 using MIE.Manager.Manages;
 using MIE.Runtime.BoardSystem.Item;
+using MIE.Runtime.EventSystem.Core;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -73,17 +74,17 @@ namespace MIE.Runtime.BoardSystem.Slot
         {
             if (isLocked)
                 lockImage.Lock();
-                
+
             itemSlots = new List<ItemSlot>();
             for (int i = 0; i < itemSlotCount; i++)
             {
                 var slot = Instantiate(itemSlotPrefab, itemSlotParent);
                 itemSlots.Add(slot);
-                
+
                 slot.OnItemChanged += OnItemSlotChanged;
             }
         }
-        
+
         /// <summary>
         /// ItemSlot의 아이템이 변경되었을 때 호출되는 메서드
         /// </summary>
@@ -99,7 +100,7 @@ namespace MIE.Runtime.BoardSystem.Slot
         public BaseItem PushItem()
         {
             var availableSlots = itemSlots.Where(slot => slot.GetFrontLayer() != 0).ToList();
-            
+
             if (availableSlots.Count > 0)
             {
                 int randomIndex = Random.Range(0, availableSlots.Count);
@@ -115,7 +116,7 @@ namespace MIE.Runtime.BoardSystem.Slot
         public void PushItem(BaseItem item, out Transform parent)
         {
             var availableSlots = itemSlots.Where(slot => slot.GetFrontLayer() != 0).ToList();
-            
+
             if (availableSlots.Count > 0)
             {
                 int randomIndex = Random.Range(0, availableSlots.Count);
@@ -137,7 +138,7 @@ namespace MIE.Runtime.BoardSystem.Slot
         public void ExecuteMerge()
         {
             if (!CheckMerge()) return;
-            
+
             // 0번 레이어 아이템들을 모두 제거
             foreach (var itemSlot in itemSlots)
             {
@@ -152,8 +153,10 @@ namespace MIE.Runtime.BoardSystem.Slot
                 }
             }
 
+            EventHandler.TriggerEvent(ItemMergedEvent.Create(3));
+
             Managers.Instance.GetManager<ComboManager>().AddCombo();
-            
+
             StartCoroutine(CheckAndRefreshAllLayers());
         }
 
@@ -182,7 +185,7 @@ namespace MIE.Runtime.BoardSystem.Slot
                     itemSlot.ReduceAllLayers();
                 }
             }
-            
+
             if (CheckMerge())
             {
                 ExecuteMerge();
@@ -207,5 +210,23 @@ namespace MIE.Runtime.BoardSystem.Slot
         None, // Unlocked
         Key,  // Locked with a key
         Count // Locked with a count
+    }
+
+    public struct ItemMergedEvent : IEvent
+    {
+        public int mergeCount;
+
+        private static ItemMergedEvent instance;
+
+        public ItemMergedEvent(int count)
+        {
+            mergeCount = count;
+        }
+
+        public static ItemMergedEvent Create(int count)
+        {
+            instance.mergeCount = count;
+            return instance;
+        }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MIE.Runtime.BoardSystem.Item.Data;
 using MIE.Runtime.BoardSystem.Slot;
+using MIE.Runtime.EventSystem.Core;
 using UnityEngine;
 
 namespace MIE.Runtime.BoardSystem
@@ -12,23 +13,26 @@ namespace MIE.Runtime.BoardSystem
         [SerializeField] private List<ItemDataSO> itemDataSOs;
         [SerializeField] private int matchCount;
 
+        private int remainItemCount;
+
         public void Start()
         {
             InitializeBoard();
-            
+            EventHandler.Subscribe<ItemMergedEvent>(HandleItemMerged);
+            remainItemCount = matchCount * 3;
         }
-        
-        /// <summary>
-        /// 모든 슬롯에서 머지 가능한 것들을 확인하고 실행
-        /// </summary>
-        public void CheckAndExecuteAllMerges()
+
+        private void OnDestroy()
         {
-            foreach (var slot in slots)
+            EventHandler.Unsubscribe<ItemMergedEvent>(HandleItemMerged);
+        }
+
+        private void HandleItemMerged(ItemMergedEvent evt)
+        {
+            remainItemCount -= evt.mergeCount;
+            if (remainItemCount <= 0)
             {
-                if (slot.CheckMerge())
-                {
-                    slot.ExecuteMerge();
-                }
+                EventHandler.TriggerEvent<BoardClearedEvent>();
             }
         }
 
@@ -51,6 +55,16 @@ namespace MIE.Runtime.BoardSystem
                     item.SetItemData(itemData);
                 }
             }
+        }
+    }
+
+    public struct BoardClearedEvent : IEvent
+    {
+        private static BoardClearedEvent instance;
+
+        public static BoardClearedEvent Create()
+        {
+            return instance;
         }
     }
 }
