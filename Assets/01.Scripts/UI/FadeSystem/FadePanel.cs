@@ -2,7 +2,7 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 
-namespace MIE.UI.Component
+namespace MIE.UI.FadeSystem
 {
     public class FadePanel : MonoBehaviour
     {

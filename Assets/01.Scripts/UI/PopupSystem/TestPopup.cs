@@ -8,7 +8,7 @@ namespace MIE.UI.PopupSystem
     {
         private void Start()
         {
-            Managers.Instance.GetManager<UIManager>().PopupModule.OpenPopup(PopupType.GameOver);
+            Managers.Instance.GetManager<UIManager>().GetUIModule<PopupModule>().OpenPopup(PopupType.GameOver);
         }
     }
 }

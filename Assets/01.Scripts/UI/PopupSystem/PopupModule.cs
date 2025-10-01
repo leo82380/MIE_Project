@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using MIE.Manager.Interface;
+using Object = UnityEngine.Object;
 
 namespace MIE.UI.PopupSystem
 {
-    public class PopupModule : IDisposable
+    public class PopupModule : IUIModule
     {
-        private Dictionary<PopupType, PopupPanel> popupPanels = new Dictionary<PopupType, PopupPanel>();
+        private Dictionary<PopupType, PopupPanel> popupPanels;
 
         public void RegisterPopup(PopupType type, PopupPanel panel)
         {
@@ -23,9 +25,20 @@ namespace MIE.UI.PopupSystem
             }
         }
 
+        public void Initialize()
+        {
+            popupPanels = new Dictionary<PopupType, PopupPanel>();
+            foreach (PopupPanel panel in Object.FindObjectsByType<PopupPanel>(UnityEngine.FindObjectsSortMode.None))
+            {
+                RegisterPopup(panel.PopupType, panel);
+            }
+        }
+
         public void Dispose()
         {
             popupPanels.Clear();
         }
+
+        
     }
 }

@@ -20,19 +20,6 @@ namespace MIE.Runtime.BoardSystem.Item
 
         public int Layer { get; private set; }
 
-        event Action<ItemDataSO> IItem.OnSetItemData
-        {
-            add
-            {
-                throw new NotImplementedException();
-            }
-
-            remove
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         private void Awake()
         {
             componentDict = new Dictionary<Type, IItemComponent>();

@@ -1,4 +1,4 @@
-using MIE.UI.Component;
+using MIE.UI.FadeSystem;
 using UnityEngine;
 
 namespace MIE.UI.PopupSystem
