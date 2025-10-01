@@ -1,4 +1,4 @@
-namespace MIE.BoardSystem.Item.Component
+namespace MIE.Runtime.BoardSystem.Item.Component
 {
     public interface IItemComponent
     {

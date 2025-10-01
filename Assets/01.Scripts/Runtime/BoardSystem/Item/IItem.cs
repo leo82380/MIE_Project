@@ -1,7 +1,7 @@
 using System;
-using MIE.BoardSystem.Item.Data;
+using MIE.Runtime.BoardSystem.Item.Data;
 
-namespace MIE.BoardSystem.Item
+namespace MIE.Runtime.BoardSystem.Item
 {
     public interface IItem
     {

@@ -1,7 +1,7 @@
 using MIE.Attribute.PreviewTexture;
 using UnityEngine;
 
-namespace MIE.BoardSystem.Item.Data
+namespace MIE.Runtime.BoardSystem.Item.Data
 {
     public class ItemDataSO : ScriptableObject
     {

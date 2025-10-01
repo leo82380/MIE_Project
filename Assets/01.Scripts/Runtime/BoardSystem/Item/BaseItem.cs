@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using MIE.BoardSystem.Item.Component;
-using MIE.BoardSystem.Item.Data;
 using MIE.Manager.Interface;
+using MIE.Runtime.BoardSystem.Item.Component;
+using MIE.Runtime.BoardSystem.Item.Data;
 using UnityEngine;
 
-namespace MIE.BoardSystem.Item
+namespace MIE.Runtime.BoardSystem.Item
 {
     // 아이템의 기본 클래스
     public class BaseItem : MonoBehaviour, IItem
@@ -19,6 +19,19 @@ namespace MIE.BoardSystem.Item
         public event Action<ItemDataSO> OnSetItemData;
 
         public int Layer { get; private set; }
+
+        event Action<ItemDataSO> IItem.OnSetItemData
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         private void Awake()
         {

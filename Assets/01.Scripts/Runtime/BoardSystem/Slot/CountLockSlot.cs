@@ -1,4 +1,4 @@
-namespace MIE.BoardSystem.Slot
+namespace MIE.Runtime.BoardSystem.Slot
 {
     public class CountLockSlot : LockSlot
     {

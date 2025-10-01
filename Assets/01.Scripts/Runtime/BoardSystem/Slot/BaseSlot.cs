@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using MIE.BoardSystem.Item;
 using MIE.Manager.Core;
 using MIE.Manager.Manages;
+using MIE.Runtime.BoardSystem.Item;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace MIE.BoardSystem.Slot
+namespace MIE.Runtime.BoardSystem.Slot
 {
     // 기본 슬롯 클래스
     public class BaseSlot : MonoBehaviour

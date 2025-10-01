@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using MIE.BoardSystem.Item.Data;
-using MIE.BoardSystem.Slot;
+using MIE.Runtime.BoardSystem.Item.Data;
+using MIE.Runtime.BoardSystem.Slot;
 using UnityEngine;
 
-namespace MIE.BoardSystem
+namespace MIE.Runtime.BoardSystem
 {
     // 보드 매니저 클래스
     public class Board : MonoBehaviour

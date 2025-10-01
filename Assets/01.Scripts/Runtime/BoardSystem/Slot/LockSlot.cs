@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MIE.BoardSystem.Slot
+namespace MIE.Runtime.BoardSystem.Slot
 {
     public abstract class LockSlot : MonoBehaviour
     {

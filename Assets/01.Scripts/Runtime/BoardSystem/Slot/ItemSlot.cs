@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MIE.BoardSystem.Item;
-using MIE.BoardSystem.Item.Data;
+using MIE.Runtime.BoardSystem.Item;
+using MIE.Runtime.BoardSystem.Item.Data;
 using UnityEngine;
 
-namespace MIE.BoardSystem.Slot
+namespace MIE.Runtime.BoardSystem.Slot
 {
     // 아이템 슬롯(일반 슬롯의 아이템을 넣을 수 있는 칸 슬롯)
     public class ItemSlot : MonoBehaviour

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using MIE.BoardSystem.Slot;
 using MIE.Manager.Interface;
+using MIE.Runtime.BoardSystem.Slot;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace MIE.BoardSystem.Item.Component
+namespace MIE.Runtime.BoardSystem.Item.Component
 {
     public class ItemDragger : MonoBehaviour, IItemComponent, IBeginDragHandler, IDragHandler, IEndDragHandler, IInitializable
     {
@@ -52,7 +52,7 @@ namespace MIE.BoardSystem.Item.Component
         {
             SetDraggable(true);
             var raycastResults = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(eventData, raycastResults);
+            UnityEngine.EventSystems.EventSystem.current.RaycastAll(eventData, raycastResults);
 
             Transform targetParent = null;
             bool droppedSuccessfully = false;

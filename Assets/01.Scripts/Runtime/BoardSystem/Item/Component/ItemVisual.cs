@@ -1,8 +1,8 @@
-using MIE.BoardSystem.Item.Data;
+using MIE.Runtime.BoardSystem.Item.Data;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MIE.BoardSystem.Item.Component
+namespace MIE.Runtime.BoardSystem.Item.Component
 {
     public class ItemVisual : MonoBehaviour, IItemComponent
     {
