@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +5,6 @@ using MIE.BoardSystem.Item;
 using MIE.Manager.Core;
 using MIE.Manager.Manages;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace MIE.BoardSystem.Slot
@@ -158,7 +156,7 @@ namespace MIE.BoardSystem.Slot
             
             StartCoroutine(CheckAndRefreshAllLayers());
         }
-        
+
         /// <summary>
         /// 0번 레이어가 모두 없으면 전체 ItemSlot의 레이어를 재정렬
         /// </summary>
@@ -166,7 +164,7 @@ namespace MIE.BoardSystem.Slot
         {
             yield return null; // 한 프레임 대기
             bool hasLayerZero = false;
-            
+
             // 0번 레이어가 하나라도 있는지 확인
             foreach (var itemSlot in itemSlots)
             {
@@ -176,13 +174,18 @@ namespace MIE.BoardSystem.Slot
                     break;
                 }
             }
-            
+
             if (!hasLayerZero)
             {
                 foreach (var itemSlot in itemSlots)
                 {
                     itemSlot.ReduceAllLayers();
                 }
+            }
+            
+            if (CheckMerge())
+            {
+                ExecuteMerge();
             }
         }
 

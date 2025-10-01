@@ -1,3 +1,4 @@
+using System;
 using MIE.Runtime.TimerSystem;
 using TMPro;
 using UnityEngine;
@@ -12,8 +13,15 @@ namespace MIE.Runtime.TimerText
         {
             Timer.AddTimer(1, 10)
                 .Connect(timerText)
-                .OnComplete(() => Debug.Log("타이머 완료!"))
+                .OnComplete(HandleTimerEnd)
                 .Start();
         }
+
+        private void HandleTimerEnd()
+        {
+            EventSystem.Core.EventHandler.TriggerEvent(new TimerCompleteEvent());
+        }
     }
+
+    public struct TimerCompleteEvent : EventSystem.Core.IEvent {}
 }
