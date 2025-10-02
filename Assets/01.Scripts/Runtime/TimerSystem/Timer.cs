@@ -196,5 +196,11 @@ namespace MIE.Runtime.TimerSystem
                 ResumeTimer();
             }
         }
+
+        ~TimerHandle()
+        {
+            StopTimer();
+            EventHandler.Unsubscribe<TimerStopEvent>(HandlePause);
+        }
     }
 }

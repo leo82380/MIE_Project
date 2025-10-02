@@ -6,6 +6,7 @@ using EventHandler = MIE.Runtime.EventSystem.Core.EventHandler;
 
 namespace MIE.Runtime.BoosterSystem
 {
+    // 시간 일시정지
     public class TimerStopBooster : Booster
     {
         [SerializeField] private float stopDuration = 5f;
@@ -24,13 +25,16 @@ namespace MIE.Runtime.BoosterSystem
 
         public void Update()
         {
+#if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.B))
             {
                 UseBooster();
             }
+#endif
         }
     }
 
+    // 타이머 일시정지 이벤트
     public struct TimerStopEvent : IEvent
     {
         private bool isStop;

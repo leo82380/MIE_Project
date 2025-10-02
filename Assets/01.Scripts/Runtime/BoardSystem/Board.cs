@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using MIE.Manager.Core;
+using MIE.Manager.Manages;
+using MIE.Runtime.BoardSystem.Item;
 using MIE.Runtime.BoardSystem.Item.Data;
 using MIE.Runtime.BoardSystem.Slot;
 using MIE.Runtime.EventSystem.Core;
@@ -52,6 +55,7 @@ namespace MIE.Runtime.BoardSystem
                     var slotIndex = Random.Range(0, slots.Count);
                     var slot = slots[slotIndex];
                     var item = slot.PushItem();
+                    Managers.Instance.GetManager<BoardManager>().RegisterItem(item);
                     item.SetItemData(itemData);
                 }
             }

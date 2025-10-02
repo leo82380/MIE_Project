@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using MIE.Manager.Core;
 using MIE.Manager.Interface;
+using MIE.Manager.Manages;
 using MIE.Runtime.BoardSystem.Item.Component;
 using MIE.Runtime.BoardSystem.Item.Data;
 using UnityEngine;
@@ -50,7 +52,7 @@ namespace MIE.Runtime.BoardSystem.Item
 
         private void OnDestroy()
         {
-
+            Managers.Instance.GetManager<BoardManager>().UnregisterItem(this);
             foreach (var component in componentDict.Values)
             {
                 component.UnregisterEvent(this);
