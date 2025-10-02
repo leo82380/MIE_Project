@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MIE.Runtime.BoosterSystem;
 using TMPro;
+using EventHandler = MIE.Runtime.EventSystem.Core.EventHandler;
 
 namespace MIE.Runtime.TimerSystem
 {
@@ -18,7 +20,35 @@ namespace MIE.Runtime.TimerSystem
 
         public static void Clear()
         {
+            foreach (var timer in timers)
+            {
+                timer.StopTimer();
+            }
             timers.Clear();
+        }
+
+        public static void PauseAll()
+        {
+            foreach (var timer in timers)
+            {
+                timer.PauseTimer();
+            }
+        }
+
+        public static void ResumeAll()
+        {
+            foreach (var timer in timers)
+            {
+                timer.ResumeTimer();
+            }
+        }
+
+        public static void StopAll()
+        {
+            foreach (var timer in timers)
+            {
+                timer.StopTimer();
+            }
         }
     }
 
@@ -27,6 +57,9 @@ namespace MIE.Runtime.TimerSystem
         private float totalSeconds;
         private int minutes;
         private int seconds;
+
+        private bool isRunning;
+        private bool isPaused;
 
         private TextMeshProUGUI textComponent;
 
@@ -51,7 +84,50 @@ namespace MIE.Runtime.TimerSystem
             totalSeconds = minutes * 60 + seconds;
             this.minutes = minutes;
             this.seconds = seconds;
+            isRunning = true;
+            isPaused = false;
             await StartTimerAsync();
+        }
+
+        public void StopTimer()
+        {
+            isRunning = false;
+            isPaused = false;
+        }
+
+        public void PauseTimer()
+        {
+            if (isRunning && !isPaused)
+            {
+                isPaused = true;
+            }
+        }
+
+        public async void ResumeTimer()
+        {
+            if (isRunning && isPaused && totalSeconds > 0)
+            {
+                isPaused = false;
+                await StartTimerAsync();
+            }
+            else if (!isRunning && totalSeconds > 0)
+            {
+                isRunning = true;
+                isPaused = false;
+                await StartTimerAsync();
+            }
+        }
+
+        public void TogglePause()
+        {
+            if (isPaused)
+            {
+                ResumeTimer();
+            }
+            else
+            {
+                PauseTimer();
+            }
         }
 
         public void UpdateText()
@@ -61,16 +137,28 @@ namespace MIE.Runtime.TimerSystem
 
         private async Task StartTimerAsync()
         {
-            while (totalSeconds > 0)
+            while (totalSeconds > 0 && isRunning)
             {
+                if (isPaused)
+                {
+                    await Task.Delay(100);
+                    continue;
+                }
+
                 await Task.Delay(1000);
+
+                if (!isRunning || isPaused) break;
+
                 totalSeconds--;
                 minutes = (int)(totalSeconds / 60);
                 seconds = (int)(totalSeconds % 60);
                 UpdateText();
             }
 
-            OnCompleted?.Invoke();
+            if (totalSeconds <= 0 && isRunning)
+            {
+                OnCompleted?.Invoke();
+            }
         }
 
         public TimerHandle OnComplete(Action action)
@@ -83,6 +171,30 @@ namespace MIE.Runtime.TimerSystem
         {
             StartTimer(minutes, seconds);
             return this;
+        }
+
+        public TimerHandle AddPause()
+        {
+            EventHandler.Subscribe<TimerStopEvent>(HandlePause);
+            return this;
+        }
+
+        public TimerHandle RemovePause()
+        {
+            EventHandler.Unsubscribe<TimerStopEvent>(HandlePause);
+            return this;
+        }
+
+        private void HandlePause(TimerStopEvent evt)
+        {
+            if (evt.IsStop)
+            {
+                PauseTimer();
+            }
+            else
+            {
+                ResumeTimer();
+            }
         }
     }
 }
