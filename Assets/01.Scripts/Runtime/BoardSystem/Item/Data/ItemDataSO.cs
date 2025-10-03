@@ -16,6 +16,13 @@ namespace MIE.Runtime.BoardSystem.Item.Data
         None,
         Milk,
         Coffee,
-        Yogurt
+        Yogurt,
+        Lamune,
+        Coke,
+        Hanberger,
+        Sandwich,
+        Pizza,
+        Cake,
+        IceCream,
     }
 }

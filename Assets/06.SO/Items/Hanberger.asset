@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed5e7f63bc744a344bcb445989129c2c, type: 3}
+  m_Name: Hanberger
+  m_EditorClassIdentifier: 
+  ItemSprite: {fileID: 4235563428174647408, guid: 08c0f0e1f54c4fc4380da0d65b6a00dc, type: 3}
+  ItemID: 5
+  ItemType: 6

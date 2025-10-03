@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MIE.Manager.Interface;
 using MIE.Runtime.BoardSystem.Item;
+using MIE.Runtime.BoardSystem.Item.Data;
 
 namespace MIE.Manager.Manages
 {
@@ -27,6 +28,18 @@ namespace MIE.Manager.Manages
         public void UnregisterItem(BaseItem item)
         {
             boardItems.Remove(item);
+        }
+
+        public BaseItem GetItem(int layer, EItemType itemType)
+        {
+            foreach (var item in boardItems)
+            {
+                if (item.Layer == layer && item.GetItemData().ItemType == itemType)
+                {
+                    return item;
+                }
+            }
+            return null;
         }
     }
 }
