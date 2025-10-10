@@ -72,8 +72,7 @@ namespace MIE.Runtime.BoardSystem.Slot
         /// </summary>
         public void InitializeSlot()
         {
-            if (isLocked)
-                lockImage.Lock();
+
 
             itemSlots = new List<ItemSlot>();
             for (int i = 0; i < itemSlotCount; i++)
@@ -83,6 +82,9 @@ namespace MIE.Runtime.BoardSystem.Slot
 
                 slot.OnItemChanged += OnItemSlotChanged;
             }
+            
+            if (isLocked)
+                lockImage.Lock();
         }
 
         /// <summary>

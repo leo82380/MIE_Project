@@ -1,3 +1,4 @@
+using MIE.Manager.Core;
 using MIE.Manager.Manages;
 using MIE.Runtime.EventSystem.Core;
 using TMPro;
@@ -22,7 +23,7 @@ namespace MIE.UI
 
         private void HandleComboChanged(ComboEvent evt)
         {
-            comboText.text = $"Combo {evt.Combo}";
+            comboText.text = $"Combo {evt.Combo}, {Managers.Instance.GetManager<ResultManager>().StarCount} Star";
         }
     }
 }

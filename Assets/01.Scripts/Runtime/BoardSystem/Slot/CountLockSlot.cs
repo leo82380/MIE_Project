@@ -11,6 +11,7 @@ namespace MIE.Runtime.BoardSystem.Slot
             {
                 lockImage.sprite = null;
                 gameObject.SetActive(false);
+                isLocked = false;
             }
         }
     }

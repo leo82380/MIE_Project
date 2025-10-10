@@ -3777,6 +3777,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slot_Board (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 8547604423366989800, guid: 5570aa749b1e03f4a87d15bfab8ebfe3, type: 3}
+      propertyPath: isLocked
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
